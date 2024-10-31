@@ -1,7 +1,7 @@
 
 #python3 -m venv venv
 #source venv/bin/activate
-#pip freeze > requirements.txt
+#pip freeze > rclear
 #uvicorn app.main:app --reload
 from fastapi import FastAPI, HTTPException, UploadFile, Depends
 from sqlalchemy import text
