@@ -1,29 +1,47 @@
-
-
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import text
+import os
+from fastapi import APIRouter, UploadFile, BackgroundTasks, HTTPException, Depends
 from sqlalchemy.orm import Session
-
 from app.database import get_db
+import pandas as pd
 
 router = APIRouter()
 
-@router.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-@router.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name} !!!!"}
-
-@router.get("/foo2")
-def getUsers(db: Session = Depends(get_db)):
+def save_chunk_to_db(chunk: pd.DataFrame, db: Session):
     try:
-        query = text("SELECT * FROM users")
-        result = db.execute(query)
-        users = [dict(row._mapping) for row in result]  # Use _mapping to get a dict-like object
-        return users
+        chunk.to_sql('games', con=db.get_bind(), if_exists='append', index=False)
+        print("Chunk saved to the database successfully.")
     except Exception as e:
-        print(f"An error occurred: {e}")
-        raise HTTPException(status_code=500, detail="An error occurred while f")
+        print(f"Error occurred while saving chunk to DB: {e}")
+        raise HTTPException(status_code=500, detail="Failed to save chunk to database.")
+
+def process_csv_in_chunks(file_path: str, db: Session, chunk_size: int = 10000):
+    try:
+        # Read the CSV in chunks
+        for chunk in pd.read_csv(file_path, chunksize=chunk_size):
+            save_chunk_to_db(chunk, db)
+    except Exception as e:
+        print(f"Error occurred while processing CSV in chunks: {e}")
+        raise HTTPException(status_code=500, detail="Failed to process CSV file.")
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)  # Clean up the temp file
+
+@router.post("/upload/")
+async def upload_csv(file: UploadFile, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    try:
+        # Create a temporary file path
+        file_path = f"tmp/{file.filename}"
+        os.makedirs("tmp", exist_ok=True)  # Create tmp directory if it doesn't exist
+
+        # Save the uploaded file to the temp location
+        with open(file_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+
+        # Add the task to process the CSV in chunks in the background
+        background_tasks.add_task(process_csv_in_chunks, file_path, db)
+        
+        return {"status": "File uploaded and is being processed."}
+    except Exception as e:
+        print(f"UPLOAD ERROR: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred during the file upload.")
