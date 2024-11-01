@@ -4,11 +4,14 @@
 #pip freeze > requirements.txt
 #pip install -r requirements.txt
 #uvicorn app.main:app --reload
+#pytest -v app/tests/test_upload.py
+#API doc http://localhost:8000/docs
 from fastapi import FastAPI, HTTPException, UploadFile, Depends
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from multiprocessing import Pool
 from .controller.upload import router as upload_router
+from .controller.explorer import router as explorer_router
 from .database import Base, engine, get_db
 from sqlalchemy.orm import Session
 from .models.game import Game
@@ -17,8 +20,9 @@ app = FastAPI()
 Base.metadata.create_all(bind=engine)
 
 app.include_router(upload_router)
+app.include_router(explorer_router)
 
-@app.get("/foo")
+@app.get("/test")
 def getUsers(db: Session = Depends(get_db)):
     try:
         query = text("SELECT * FROM users")
