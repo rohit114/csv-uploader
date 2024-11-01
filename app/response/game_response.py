@@ -1,9 +1,3 @@
-# from datetime import date
-# from pydantic import BaseModel
-# from typing import List, Optional
-
-# from sqlalchemy import Date
-
 from pydantic import BaseModel
 from datetime import date
 from typing import List, Optional

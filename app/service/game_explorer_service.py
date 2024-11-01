@@ -1,5 +1,3 @@
-# app/services/game_service.py
-
 from datetime import date
 from sqlalchemy.orm import Session
 from typing import List, Optional
