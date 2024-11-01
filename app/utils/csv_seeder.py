@@ -10,17 +10,18 @@ header = [
     "categories", "genres", "tags"
 ]
 
-sample_name = ["Galactic Bowling", "Space Wars", "Alien Strike", "Adventure Game"]
+sample_name = ["Galactic Bowling", "Space Wars", "Alien Strike", "Adventure Game", "Mario", "GTA", "NFS Race", "God Of war", "Kart race"]
 sample_languages = ["['English']", "['Spanish']", "['French']", "['German']"]
 sample_categories = ["Single-player", "Multi-player"]
-sample_genres = ["Indie", "Casual", "Sports"]
+sample_genres = ["Indie", "Casual", "Sports", "Arcade", "Adventure"]
 sample_tags = ["Indie", "Action", "Strategy"]
+sample_developers = ["Rockstar", "EA", "UBI Soft", ""]
 
-def generate_random_date(start_date="Jan 1, 2000", end_date="Dec 31, 2023"):
+def generate_random_date(start_date="Jan 1, 2000", end_date="Oct 31, 2024"):
     start = datetime.strptime(start_date, "%b %d, %Y")
     end = datetime.strptime(end_date, "%b %d, %Y")
     random_date = start + timedelta(days=random.randint(0, (end - start).days))
-    return random_date.strftime("%b %d, %Y")
+    return random_date.date()  # Return a date object
 
 def generate_unique_appid(existing_appids):
     # Generates a unique alphanumeric AppID in the format "ABC_12345"
@@ -44,25 +45,26 @@ def generate_random_data(num_entries, start_id=1, output_file="smaller_sample.cs
                 generate_unique_appid(existing_appids),  # Unique alphanumeric AppID
                 random.choice(sample_name),  # Name
                 generate_random_date(),  # Release date
-                random.choice([0, 13, 16]),  # Required age, fewer options
-                round(random.uniform(0, 20), 2),  # Price range reduced
-                random.randint(0, 2),  # DLC count, fewer options
-                "Sample game description.",  # Shorter About the game
+                random.choice([0, 13, 16, 18]),  # Required age
+                round(random.uniform(0, 20), 2),  # Price range
+                random.randint(0, 2),  # DLC count
+                "Sample game description.",  # About the game
                 random.choice(sample_languages),  # Supported languages
                 random.choice(["TRUE", "FALSE"]),  # Windows
                 random.choice(["TRUE", "FALSE"]),  # Mac
                 random.choice(["TRUE", "FALSE"]),  # Linux
-                random.randint(0, 1000),  # Positive, smaller range
-                random.randint(0, 500),  # Negative, smaller range
-                "",  # Score rank left empty
-                "Sample Dev",  # Developers
+                random.randint(0, 1000),  # Positive,
+                random.randint(0, 500),  # Negative
+                random.randint(0, 10),  # Score rank
+                random.choice(sample_developers),  # Developers
                 "Sample Pub",  # Publishers
                 random.choice(sample_categories),  # Categories
                 random.choice(sample_genres),  # Genres
                 random.choice(sample_tags),  # Tags
             ]
+            print("Generating entries", i)
             writer.writerow(row)
     print(f"{num_entries} entries written to {output_file}.")
 
 # Generate around 1 million entries with reduced size
-generate_random_data(100000, start_id=1, output_file="smaller_sample.csv")
+generate_random_data(1000000, start_id=1, output_file="sample_data.csv")
