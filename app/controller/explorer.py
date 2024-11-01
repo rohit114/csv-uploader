@@ -34,10 +34,10 @@ def get_games(
     if name is not None:
         query = query.filter(Game.name.ilike(f"%{name}%"))
         
-    # if release_date_gte is not None:
-    #     query = query.filter(Game.release_date >= release_date_gte)
-    # if release_date_lte is not None:
-    #     query = query.filter(Game.release_date <= release_date_lte)
+    if release_date_gte is not None:
+        query = query.filter(Game.release_date >= release_date_gte)
+    if release_date_lte is not None:
+        query = query.filter(Game.release_date <= release_date_lte)
 
     #pagination
     games = query.offset(offset).limit(limit).all()
