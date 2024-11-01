@@ -33,7 +33,7 @@ def generate_unique_appid(existing_appids):
             existing_appids.add(app_id)
             return app_id
 
-def generate_random_data(num_entries, start_id=1, output_file="smaller_sample.csv"):
+def generate_random_data(num_entries, start_id=1, output_file="sample_data.csv"):
     existing_appids = set()  # Track all generated AppIDs to prevent duplicates
     with open(output_file, mode="w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
