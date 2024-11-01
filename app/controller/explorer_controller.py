@@ -1,6 +1,7 @@
 
 from datetime import date
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 from typing import Any, Dict, Optional, List
 from app.database import get_db
@@ -42,5 +43,16 @@ def get_games(
         "games": games,
         "next_offset": next_offset,
     }
+    
+@router.get("/test")
+def testRarQuery(db: Session = Depends(get_db)):
+    try:
+        query = text("SELECT * FROM games LIMIT 5")
+        result = db.execute(query)
+        games = [dict(row._mapping) for row in result]
+        return games
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while f")
 
     

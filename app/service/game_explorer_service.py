@@ -25,6 +25,7 @@ def get_filtered_games(
     - limit: Number of results per page.
     - offset: Number of items to skip.
     """
+    
     # Filters based on query parameters
     if age is not None:
         query = query.filter(Game.required_age == age)
