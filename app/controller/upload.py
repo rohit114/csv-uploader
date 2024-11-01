@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from multiprocessing import Pool, cpu_count
 import pandas as pd
+from app.utils.api_key_verify import verify_api_key
 
 router = APIRouter()
 num_worker = cpu_count() - 1  # Use one less than the number of available CPUs
@@ -51,7 +52,8 @@ def process_csv_in_chunks(file_path: str, chunk_size: int = 10000):
             os.remove(file_path)  # Clean up the temp file
 
 @router.post("/upload/")
-async def upload_csv(file: UploadFile):
+async def upload_csv(file: UploadFile,
+    x_api_key: str = Depends(verify_api_key)):
     try:
         # Create a temporary file path
         file_path = f"tmp/{file.filename}"
