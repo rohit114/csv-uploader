@@ -8,6 +8,7 @@ from app.database import get_db
 from app.models.game import Game
 from app.response.game_response import GameListResponse
 from app.service.game_explorer_service import get_filtered_games
+from app.utils.api_key_verify import verify_api_key
 router = APIRouter()
 
 @router.get("/games/", response_model=GameListResponse)
@@ -19,6 +20,7 @@ def get_games(
     limit: int = Query(10, ge=1),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
+    x_api_key: str = Depends(verify_api_key)
 ):
     
     """

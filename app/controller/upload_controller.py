@@ -1,6 +1,3 @@
-
-# app/controllers/upload_controller.py
-
 import os
 from fastapi import APIRouter, UploadFile, HTTPException, Depends
 from app.service.upload_service import process_csv_in_chunks

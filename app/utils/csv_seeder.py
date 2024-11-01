@@ -3,6 +3,7 @@ import random
 from datetime import datetime, timedelta
 import string
 
+NUM_OF_RECORDS = 1000000
 header = [
     "app_id", "name", "release_date", "required_age", "price", "dlc_count",
     "about_the_game", "supported_languages", "windows", "mac", "linux",
@@ -66,5 +67,5 @@ def generate_random_data(num_entries, start_id=1, output_file="sample_data.csv")
             writer.writerow(row)
     print(f"{num_entries} entries written to {output_file}.")
 
-# Generate around 1 million entries with reduced size
-generate_random_data(1000000, start_id=1, output_file="sample_data.csv")
+# Generate entries as per NUM_OF_RECORDS
+generate_random_data(NUM_OF_RECORDS, start_id=1, output_file="sample_data.csv")
