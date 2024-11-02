@@ -56,17 +56,17 @@ To set up the project locally, follow these steps:
    2. Uplaod csv
       * About:
          * make sure to create a database as per POSTGRES_DB `.env` file
-         * can support large csv file (tested locally with 10 Lakh records, takes around 17-20 seconds ( 8 core CPU) to bulk insert in table )
+         * can support large csv file (tested locally with 10 Lakh records, takes around 17-20 seconds ( with 8 core CPU) to bulk insert in table )
 
       * METHOD: `POST`
       * URL: `{{BASE_URL}}/upload/`
       * HEADER: `x_api_key: xxxxxxx` as per `.env`, `Content-Type : multipart/form-data`
       * BODY: `form-data : key=file, value= attach sample_data.csv (generated in step 1)`
-      * api will return `200 OK  { "status": "File uploaded and processed successfully."}` on success else throw error
+      * api will return `200 OK  { "status": "File processed successfully"}` on success else throw error
 
    3. Explore Game data:
       * METHOD: `GET`
-      * URL: `{{BASE_URL}}/games/?limit=10&offset=0`
+      * URL: `{{BASE_URL}}/games/`
       * HEADER: `x_api_key` as per sample.env file
        * Query Params:
          * `limit (optional default 10)`

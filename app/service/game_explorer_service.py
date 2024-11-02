@@ -22,6 +22,8 @@ def get_filtered_games(
     - name: Substring match for the game's name.
     - limit: Number of results per page.
     - offset: Number of items to skip.
+    - release_date_gte: date greater than equal to
+    - release_date_lte: date less than equal to
     """
     
     # Filters based on query parameters
