@@ -18,7 +18,7 @@ from sqlalchemy.orm import Session
 from .models.game import Game
 app = FastAPI()
 
-Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine) #creating table as per defined model
 
 app.include_router(upload_router)
 app.include_router(explorer_router)

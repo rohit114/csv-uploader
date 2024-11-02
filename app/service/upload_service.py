@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from app.database import get_db
 
 num_worker = cpu_count() - 1  # Use one less than the number of available CPUs
+CHUNK_SIZE = 10000
 
 def save_chunk_to_db(chunk: pd.DataFrame) -> bool:
     # Creating a new database session for this process
@@ -25,7 +26,7 @@ def process_single_chunk(chunk: pd.DataFrame) -> bool:
     # Process and save a single chunk to the database
     return save_chunk_to_db(chunk)
 
-def process_csv_in_chunks(file_path: str, chunk_size: int = 10000):
+def process_csv_in_chunks(file_path: str, chunk_size: int = CHUNK_SIZE):
     try:
         # Use a pool of processes
         with Pool(processes=num_worker) as pool:
@@ -47,5 +48,7 @@ def process_csv_in_chunks(file_path: str, chunk_size: int = 10000):
         print(f"Error occurred while processing CSV in chunks: {e}")
         raise HTTPException(status_code=500, detail="Failed to process CSV file.")
     finally:
+        print("deleting... temp files")
         if os.path.exists(file_path):
             os.remove(file_path)  # Clean up the temp file
+        
